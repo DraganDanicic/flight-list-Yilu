@@ -1,7 +1,7 @@
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import FlightList from './views/flightList/flightList';
+import FlightList from './views/FlightList/FlightList';
 
 function App() {
   return (
