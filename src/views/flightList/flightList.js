@@ -1,7 +1,9 @@
+// @flow
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { Table, TableHead, TableRow, TableCell, Tab, TableBody } from '@material-ui/core';
+import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { type Flight } from '../../models/Flight';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,8 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
-const flightData = [
+const flightData: Flight[] = [
   {
     arrival: 1569155188729,
     departure: 1569140788729,

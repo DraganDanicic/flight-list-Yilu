@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import FlightList from './views/flightList/flightList';
 
@@ -21,7 +21,6 @@ function App() {
         </a>
       </header> */}
       <FlightList></FlightList>
-
     </div>
   );
 }
