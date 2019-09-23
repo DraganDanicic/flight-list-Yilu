@@ -1,0 +1,1 @@
+export type ActionTypes = {[index: string]: string};

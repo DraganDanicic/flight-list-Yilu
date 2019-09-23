@@ -1,11 +1,15 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux'
+
 import Paper from '@material-ui/core/Paper';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
 import { type Flight } from '../../models/Flight';
 import { ParseDate } from '../../components/ParseDate/ParseDate';
-import { FlightTime } from '../../components/FligthTime/FligthTime';
+import { FlightTime } from '../../components/FlightTime/FlightTime';
+import { getFlights } from "../../actions/flightListActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,25 +22,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const flightData: Flight[] = [
+export const FlightList = (
+  {flightData, getFlights }: 
   {
-    arrival: 1569155200729,
-    departure: 1569140788729,
-    destination: {
-      type: "AIRPORT",
-      value: "BELGRADE",
-    },
-    origin: {
-      type: "AIRPORT",
-      value: "MUNICH",
-    },
-    flightNo: 'JU 389',
+    flightData: Flight[],
+    getFlights: () => void
   }
-];
-
-export default function FlightList() {
+) => {
   const classes = makeStyles(useStyles);
-  
+
   return (
    <Paper className={classes.table}>
      <Table className={classes.root}>
@@ -52,14 +46,14 @@ export default function FlightList() {
       </TableHead>
       <TableBody>
         {flightData.map(flight => (
-          <TableRow key={flight.flightNo}>
+          <TableRow key={flight.flightNo + flight.departure}>
             <TableCell>{flight.origin.value}</TableCell>
             <TableCell>
-              <ParseDate date={flight.departure}></ParseDate>
+              <ParseDate timestamp={flight.departure}></ParseDate>
             </TableCell>
             <TableCell>{flight.destination.value}</TableCell>
             <TableCell>
-              <ParseDate date={flight.arrival}></ParseDate>
+              <ParseDate timestamp={flight.arrival}></ParseDate>
             </TableCell>
             <TableCell>{flight.flightNo}</TableCell>
             <TableCell>
@@ -72,3 +66,16 @@ export default function FlightList() {
    </Paper> 
   );
 }
+
+const mapStateToProps = state => ({
+  flightData: state.flights.collection,
+})
+
+const mapDispatchToProps = dispatch => {
+  dispatch(getFlights);
+  return({
+    getFlights: () => dispatch(getFlights),
+  })
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FlightList);
