@@ -49,4 +49,4 @@ const genFlight = () => {
 }
 const genFlightList = (size) => ((new Array(size)).fill(1)).map(e => genFlight());
 
-export let flightData: Flight[] = genFlightList(2000);
+export let flightData: Flight[] = genFlightList(300);

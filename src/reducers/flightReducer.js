@@ -6,7 +6,7 @@ import { type FlightState } from '../models/FlightState';
 const initialState: FlightState = {
   sorting: {
     field: 'origin',
-    order: 'asc',
+    order: 'desc',
   },
   collection: []
 }
@@ -36,10 +36,11 @@ export const flightReducer = (state: FlightState = initialState, action: Action)
   switch (action.type) {
     case flightListActionType.GET_FLIGHTS:
       state = sortState({...state, ...{collection: action.value}});
-    case flightListActionType.SORT_FLIGHT:
+      break;
+    case flightListActionType.SORT_FLIGHTS:
       state = sortState({
         ...state,
-        ...{sortState: {order: action.value.order, field: action.value.field}
+        ...{sorting: {order: action.value.order, field: action.value.field}
         }
       });
       break;

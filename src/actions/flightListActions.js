@@ -22,6 +22,6 @@ export let sortFlights: Action = (
       direction: SortDirection,
     }
   ) => ({
-  type: flightListActionType.GET_FLIGHTS,
+  type: flightListActionType.SORT_FLIGHTS,
   value: ordering,
 })

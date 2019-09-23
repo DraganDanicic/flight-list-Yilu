@@ -3,13 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux'
 
 import Paper from '@material-ui/core/Paper';
-import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableSortLabel } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { type Flight } from '../../models/Flight';
+import { type FlightSort, type SortableFields } from '../../models/FlightState';
 import { ParseDate } from '../../components/ParseDate/ParseDate';
 import { FlightTime } from '../../components/FlightTime/FlightTime';
-import { getFlights } from "../../actions/flightListActions";
+import { getFlights, sortFlights } from "../../actions/flightListActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,10 +24,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const FlightList = (
-  {flightData, getFlights }: 
+  {flightData, flightSort, getFlights, sortFlights }: 
   {
     flightData: Flight[],
-    getFlights: () => void
+    flightSort: FlightSort,
+    getFlights: () => void,
+    sortFlights: (sorting: FlightSort) => void
   }
 ) => {
   const classes = makeStyles(useStyles);
@@ -36,10 +39,19 @@ export const FlightList = (
      <Table className={classes.root}>
       <TableHead>
         <TableRow>
-          <TableCell>Origin</TableCell>
-          <TableCell>Departure</TableCell>
-          <TableCell>Destination</TableCell>
-          <TableCell>Arrival</TableCell>
+          {['Origin', 'Departure', 'Destination', 'Arrival'].map(label => (
+            <TableCell>
+              <TableSortLabel
+                active={flightSort.field === label.toLowerCase()}
+                direction={flightSort.order}
+                onClick={() => sortFlights({
+                  // $FlowFixMe
+                  field: label.toLowerCase(), 
+                  order: flightSort.order === 'desc' ? 'asc' : 'desc'
+                })}
+              >{label}</TableSortLabel>
+            </TableCell>
+          ))}
           <TableCell>Flight no.</TableCell>
           <TableCell>Flight time</TableCell>
         </TableRow>
@@ -69,12 +81,14 @@ export const FlightList = (
 
 const mapStateToProps = state => ({
   flightData: state.flights.collection,
+  flightSort: state.flights.sorting,
 })
 
 const mapDispatchToProps = dispatch => {
   dispatch(getFlights);
   return({
     getFlights: () => dispatch(getFlights),
+  sortFlights: (sorting: FlightSort) => dispatch(sortFlights(sorting)),
   })
 }
 
