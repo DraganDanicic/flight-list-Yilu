@@ -5,8 +5,8 @@ import { type FlightState } from '../models/FlightState';
 
 const initialState: FlightState = {
   sorting: {
-    field: 'departure',
-    order: 'desc',
+    field: 'origin',
+    order: 'asc',
   },
   collection: []
 }
@@ -21,21 +21,28 @@ const sortFlightList = (
       list.sort((a, b) => a[field].value.localeCompare(b[field].value) * factor)
   }
 
+const sortState = (state) => ({
+  ...state,
+  ...{
+    collection: sortFlightList(
+      [...state.collection],
+      state.sorting.field,
+      state.sorting.order
+    )
+  }
+});
+
 export const flightReducer = (state: FlightState = initialState, action: Action) => {
   switch (action.type) {
     case flightListActionType.GET_FLIGHTS:
-      state = {
+      state = sortState({...state, ...{collection: action.value}});
+    case flightListActionType.SORT_FLIGHT:
+      state = sortState({
         ...state,
-        ...{
-          collection: sortFlightList(
-            [...action.value],
-            state.sorting.field,
-            state.sorting.order
-          )
+        ...{sortState: {order: action.value.order, field: action.value.field}
         }
-      }
+      });
       break;
-    
     default:;
   }
   return state
